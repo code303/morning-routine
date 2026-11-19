@@ -48,7 +48,7 @@ Projekt-Setup (1)
 
 ### Phase 1: Fundament
 - [x] Task 1: Projekt-Setup (Vite, TS strict, Vitest, Scripts)
-- [ ] Task 2: Kern-Typen, Reglergrenzen und Plan-Erzeugung (Original-Modus)
+- [x] Task 2: Kern-Typen, Reglergrenzen und Plan-Erzeugung (Original-Modus)
 - [ ] Task 3: Ablauf-Zustandsautomat mit simulierter Uhr
 
 **Checkpoint A:** Tests und Typecheck grün, Kernlogik für den Original-Modus vollständig.

@@ -22,7 +22,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `package.json`, `tsconfig.json`, `vite.config.ts`, `index.html`, `src/main.ts`
 **Umfang:** S
 
-### - [ ] Task 2: Kern-Typen, Reglergrenzen und Plan-Erzeugung
+### - [x] Task 2: Kern-Typen, Reglergrenzen und Plan-Erzeugung
 
 **Beschreibung:** Typen für Übung, Schritt und Modus anlegen. `scaledSeconds`, `baseBounds` und `totalSeconds` sowie `buildPlan(mode, base, date)` umsetzen. Den Original-Modus mit den 9 Übungen als Daten anlegen, zunächst mit Name und Hinweis, noch ohne Posen.
 
