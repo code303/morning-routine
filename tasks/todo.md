@@ -36,7 +36,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `src/core/types.ts`, `src/core/bounds.ts`, `src/core/plan.ts`, `src/data/exercises.ts`, `src/data/modes.ts`, `tests/bounds.test.ts`
 **Umfang:** M
 
-### - [ ] Task 3: Ablauf-Zustandsautomat
+### - [x] Task 3: Ablauf-Zustandsautomat
 
 **Beschreibung:** `createSession(plan, clock)` mit `start`, `pause`, `resume`, `stop` und `tick(now)` umsetzen. Der Automat liefert den aktuellen Schritt, die Restzeit, die Phase (Übung oder 5-s-Wechselpause) und Ereignisse: `stepStart`, `countdown(3|2|1)`, `done`.
 
