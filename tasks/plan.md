@@ -74,7 +74,7 @@ Projekt-Setup (1)
 - [x] Task 13: PWA: Manifest, Icons, Service Worker, Offline-Betrieb
 - [x] Task 14: Politur: Lesbarkeit aus 2 m, Hoch/Quer, Dunkelmodus, Übungsliste, Speicher
 - [x] Task 15: E2E-Rauchtest (Playwright)
-- [ ] Task 16: Deployment auf GitHub Pages (**erst nach Rückfrage**)
+- [x] Task 16: Deployment auf GitHub Pages (**erst nach Rückfrage**)
 
 **Checkpoint D:** Alle 12 Erfolgskriterien der Spec erfüllt, manuelle Prüfung auf dem Android-Handy bestanden.
 

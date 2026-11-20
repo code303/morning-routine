@@ -3,6 +3,8 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  // Relativer Basispfad: funktioniert lokal und unter https://code303.github.io/morning-routine/
+  base: './',
   server: { host: true },
   plugins: [
     VitePWA({

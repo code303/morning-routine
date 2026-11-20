@@ -265,7 +265,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `playwright.config.ts`, `e2e/smoke.spec.ts`, `package.json`
 **Umfang:** S
 
-### - [ ] Task 16: Deployment auf GitHub Pages (erst nach Rückfrage)
+### - [x] Task 16: Deployment auf GitHub Pages (erst nach Rückfrage)
 
 **Beschreibung:** Statischer Build auf GitHub Pages mit korrektem `base`-Pfad in Vite, entweder per GitHub Action oder manuell. Danach die App auf dem Android-Handy installieren.
 
