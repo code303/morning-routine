@@ -21,6 +21,9 @@ export type Segments =
 /** Entweder eine feste Übung oder je nach A/B-Tag eine andere. */
 export type StepExercise = ExerciseId | { readonly A: ExerciseId; readonly B: ExerciseId };
 
+/** Segmente je A/B-Variante, falls sich die Varianten unterscheiden. */
+export type VariantSegments = { readonly A?: Segments; readonly B?: Segments };
+
 export interface ScaledStep {
   readonly kind: 'scaled';
   readonly exercise: StepExercise;
@@ -29,6 +32,7 @@ export interface ScaledStep {
   /** Empfohlene Höchstdauer dieses Schritts in Sekunden. */
   readonly maxSeconds: number;
   readonly segments?: Segments;
+  readonly variantSegments?: VariantSegments;
 }
 
 export interface FixedStep {
@@ -36,6 +40,7 @@ export interface FixedStep {
   readonly exercise: StepExercise;
   readonly seconds: number;
   readonly segments?: Segments;
+  readonly variantSegments?: VariantSegments;
 }
 
 export type Step = ScaledStep | FixedStep;

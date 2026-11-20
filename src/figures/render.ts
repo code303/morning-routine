@@ -19,6 +19,7 @@ const NEAR_BONES: readonly Bone[] = [
 ];
 
 const PAD = 14;
+const WALL_HEIGHT = 150;
 
 function svgEl<K extends keyof SVGElementTagNameMap>(tag: K, attrs: Record<string, string | number>) {
   const node = document.createElementNS(SVG_NS, tag);
@@ -39,6 +40,11 @@ export function animationBounds(anim: ExerciseAnimation) {
       maxX = Math.max(maxX, p.x + r);
       maxY = Math.max(maxY, p.y + r);
     }
+  }
+  for (const prop of anim.props ?? []) {
+    minX = Math.min(minX, prop.x);
+    maxX = Math.max(maxX, prop.x);
+    maxY = Math.max(maxY, WALL_HEIGHT);
   }
   // symmetrisch um x = 0, damit Spiegeln den Ausschnitt nicht verschiebt
   const half = Math.max(Math.abs(minX), Math.abs(maxX), 45) + PAD;
@@ -67,6 +73,9 @@ export function createFigure(anim: ExerciseAnimation, options: { label: string }
   const toSvg = (p: Point) => ({ x: p.x, y: b.top - p.y });
 
   root.append(svgEl('line', { x1: b.minX, y1: b.top, x2: b.minX + b.width, y2: b.top, class: 'figure-ground' }));
+  for (const prop of anim.props ?? []) {
+    root.append(svgEl('line', { x1: prop.x, y1: b.top, x2: prop.x, y2: b.top - WALL_HEIGHT, class: 'figure-prop' }));
+  }
 
   // Transparenz auf der Gruppe, nicht pro Linie – sonst entstehen dunkle Punkte an den Gelenken.
   // Nur in der Seitenansicht ist die L-Seite die ferne Seite.
@@ -83,7 +92,10 @@ export function createFigure(anim: ExerciseAnimation, options: { label: string }
 
   const far = makeLines(FAR_BONES, farGroup);
   const body = makeLines(BODY_BONES, root);
-  const near = makeLines(NEAR_BONES, root);
+  // Die nahe/rechte Seite ist bei Seitenwechseln die arbeitende Seite (per CSS hervorgehoben).
+  const nearGroup = svgEl('g', { class: 'figure-near' });
+  root.append(nearGroup);
+  const near = makeLines(NEAR_BONES, nearGroup);
   const head = svgEl('circle', { r: LENGTHS.headRadius, class: 'figure-head' });
   root.append(head);
   const lines = [...far, ...body, ...near];

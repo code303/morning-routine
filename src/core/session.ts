@@ -1,3 +1,4 @@
+import { segmentBoundaries } from './plan';
 import type { Plan } from './types';
 
 /** Millisekunden-Zeitquelle, z. B. `() => performance.now()`; in Tests simuliert. */
@@ -6,6 +7,7 @@ export type Clock = () => number;
 export type SessionEvent =
   | { readonly type: 'stepStart'; readonly index: number; readonly at: number }
   | { readonly type: 'countdown'; readonly index: number; readonly remaining: 1 | 2 | 3; readonly at: number }
+  | { readonly type: 'segmentSwitch'; readonly index: number; readonly segment: number; readonly at: number }
   | { readonly type: 'transitionStart'; readonly nextIndex: number; readonly at: number }
   | { readonly type: 'done'; readonly at: number };
 
@@ -27,6 +29,8 @@ export interface SessionState {
   readonly elapsed: number;
   readonly phaseRemaining: number;
   readonly totalRemaining: number;
+  /** Aktuelles Segment im Schritt (0 = erstes); in Wechselpausen 0. */
+  readonly segment: number;
 }
 
 export interface TickResult {
@@ -63,7 +67,7 @@ export function buildTimeline(plan: Plan): Phase[] {
 }
 
 /** Alle Ereignisse, zeitlich sortiert. Gleiche Zeitpunkte behalten die Erzeugungsreihenfolge. */
-export function buildEvents(timeline: readonly Phase[]): SessionEvent[] {
+export function buildEvents(timeline: readonly Phase[], plan?: Plan): SessionEvent[] {
   const events: SessionEvent[] = [];
   for (const phase of timeline) {
     if (phase.kind === 'transition') {
@@ -71,6 +75,12 @@ export function buildEvents(timeline: readonly Phase[]): SessionEvent[] {
       continue;
     }
     events.push({ type: 'stepStart', index: phase.index, at: phase.start });
+    const step = plan?.steps[phase.index];
+    if (step) {
+      segmentBoundaries(step).forEach((offset, i) =>
+        events.push({ type: 'segmentSwitch', index: phase.index, segment: i + 1, at: phase.start + offset }),
+      );
+    }
     for (const remaining of COUNTDOWN) {
       const at = phase.end - remaining;
       if (at > phase.start) events.push({ type: 'countdown', index: phase.index, remaining, at });
@@ -83,7 +93,14 @@ export function buildEvents(timeline: readonly Phase[]): SessionEvent[] {
 
 export function createSession(plan: Plan, clock: Clock): Session {
   const timeline = buildTimeline(plan);
-  const events = buildEvents(timeline);
+  const events = buildEvents(timeline, plan);
+  const boundaries = plan.steps.map(segmentBoundaries);
+
+  const segmentAt = (phase: Phase, elapsed: number): number => {
+    if (phase.kind !== 'step') return 0;
+    const offset = elapsed - phase.start;
+    return (boundaries[phase.index] ?? []).filter((b) => b <= offset).length;
+  };
   const total = timeline[timeline.length - 1]?.end ?? 0;
 
   let status: SessionStatus = 'idle';
@@ -120,6 +137,7 @@ export function createSession(plan: Plan, clock: Clock): Session {
         elapsed,
         phaseRemaining: Math.max(0, phase.end - elapsed),
         totalRemaining: Math.max(0, total - elapsed),
+        segment: segmentAt(phase, elapsed),
       },
       events: due,
     };

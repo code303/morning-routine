@@ -61,12 +61,12 @@ Projekt-Setup (1)
 **Checkpoint B:** Der Original-Modus läuft im Handy-Browser (Dev-Server) ohne Berührung durch, mit Tönen und anbleibendem Bildschirm. Danach Rückmeldung von dir.
 
 ### Phase 3: Inhalte und Modi
-- [ ] Task 7: Posen der 9 Originalübungen
-- [ ] Task 8: Segmente (Seiten, Halte-Intervalle, Atemkreis) in Kern und UI
-- [ ] Task 9: A/B-Tag und Modus Erweitert
-- [ ] Task 10: Posen der stehenden Ergänzungen inklusive Hilfsobjekte
-- [ ] Task 11: Posen des Bodenblocks
-- [ ] Task 12: Modi Kurz und Blutdruck
+- [x] Task 7: Posen der 9 Originalübungen
+- [x] Task 8: Segmente (Seiten, Halte-Intervalle, Atemkreis) in Kern und UI
+- [x] Task 9: A/B-Tag und Modus Erweitert
+- [x] Task 10: Posen der stehenden Ergänzungen inklusive Hilfsobjekte
+- [x] Task 11: Posen des Bodenblocks
+- [x] Task 12: Modi Kurz und Blutdruck
 
 **Checkpoint C:** Alle vier Modi und alle Figuren sind vorhanden. Erfolgskriterien 3–7, 9, 10 und 12 sind erfüllt. Danach Rückmeldung zu den Figuren.
 

@@ -188,6 +188,12 @@ body {
   width: 0;
   background: var(--primary);
 }
+.stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  display: flex;
+}
 .figure-box {
   flex: 1 1 auto;
   min-height: 0;
@@ -274,7 +280,7 @@ body {
   .progress-track {
     grid-column: 1 / -1;
   }
-  .figure-box {
+  .stage {
     grid-row: 3 / 5;
   }
   .figure {
@@ -291,4 +297,88 @@ body {
   font-weight: 700;
   margin: 0;
   font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Seitenwechsel, Atemkreis, Hinweise ---------- */
+.has-sides .figure-near .figure-limb {
+  stroke: var(--primary-strong);
+}
+.breath {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.breath[hidden] {
+  display: none;
+}
+.breath-circle {
+  width: min(70%, 42dvh);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--primary) 22%, transparent);
+  border: 4px solid var(--primary-strong);
+  will-change: transform;
+}
+.breath-label {
+  position: absolute;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.day-badge {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.day-badge[hidden],
+.mode-note[hidden] {
+  display: none;
+}
+.mode-note {
+  margin: 0;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  color: var(--destructive);
+}
+
+/* ---------- Galerie (?gallery) ---------- */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.gallery-item {
+  margin: 0;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  text-align: center;
+}
+.gallery-figure {
+  height: 180px;
+  display: flex;
+}
+.gallery-figure .figure {
+  max-height: none;
+}
+.figure-prop {
+  stroke: var(--muted-foreground);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+/* Atemkreis hinter der Figur, Beschriftung unten */
+.figure-box {
+  position: relative;
+  z-index: 1;
+}
+.breath {
+  z-index: 0;
+}
+.breath-label {
+  bottom: 0;
 }

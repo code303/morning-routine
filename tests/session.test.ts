@@ -34,6 +34,8 @@ function describeEvent(e: SessionEvent): string {
       return `${e.at}:cd${e.remaining}#${e.index}`;
     case 'transitionStart':
       return `${e.at}:transition→${e.nextIndex}`;
+    case 'segmentSwitch':
+      return `${e.at}:segment${e.segment}#${e.index}`;
     case 'done':
       return `${e.at}:done`;
   }

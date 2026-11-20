@@ -123,7 +123,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 
 ## Phase 3: Inhalte und Modi
 
-### - [ ] Task 7: Posen der 9 Originalübungen
+### - [x] Task 7: Posen der 9 Originalübungen
 
 **Beschreibung:** Schlüsselposen A/B/C, Ansicht, Schleifendauer und Abfolge für alle 9 Übungen gemäß Bericht. Marching Claps zeigen die Hand am Gegenknie.
 
@@ -136,7 +136,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `src/figures/poses.ts`, `src/data/exercises.ts`, `src/ui/gallery.ts`
 **Umfang:** M
 
-### - [ ] Task 8: Segmente
+### - [x] Task 8: Segmente
 
 **Beschreibung:**
 - **Kern:** `sides`, `holdSeconds` und `breath` im Plan und im Automaten, mit dem Ereignis `segmentSwitch`.
@@ -151,7 +151,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `src/core/plan.ts`, `src/core/session.ts`, `src/ui/session.ts`, `src/figures/render.ts`, `tests/segments.test.ts`
 **Umfang:** M
 
-### - [ ] Task 9: A/B-Tag und Modus Erweitert
+### - [x] Task 9: A/B-Tag und Modus Erweitert
 
 **Beschreibung:**
 - **A/B-Tag:** `abDay.ts` (Tage seit 2026-01-01, reine Datumsrechnung).
@@ -168,7 +168,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `src/core/abDay.ts`, `src/data/modes.ts`, `src/data/exercises.ts`, `src/ui/start.ts`, `tests/abDay.test.ts`
 **Umfang:** M
 
-### - [ ] Task 10: Posen der stehenden Ergänzungen
+### - [x] Task 10: Posen der stehenden Ergänzungen
 
 **Beschreibung:**
 - **Posen für:** Hip Hinge, Wadenheben + Wippen, Liegestütz (Wandvariante), Wall Angels, Goldener Hahn, Atmung (Wuji, Öffnen/Schließen), Aufstehen vom Boden.
@@ -183,7 +183,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `src/figures/poses.ts`, `src/figures/props.ts`, `src/data/exercises.ts`
 **Umfang:** M
 
-### - [ ] Task 11: Posen des Bodenblocks
+### - [x] Task 11: Posen des Bodenblocks
 
 **Beschreibung:** Posen für Bird Dog, Seitstütz, Glute Bridge, Dead Bug und Hüftbeuger-Dehnung. Liegende und kniende Posen nutzen Wurzelrotation und Seitenansicht.
 
@@ -196,7 +196,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `src/figures/poses.ts`, `src/data/exercises.ts`
 **Umfang:** S
 
-### - [ ] Task 12: Modi Kurz und Blutdruck
+### - [x] Task 12: Modi Kurz und Blutdruck
 
 **Beschreibung:**
 - **Kurz:** Daten laut Spec.

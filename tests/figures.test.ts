@@ -56,6 +56,17 @@ describe('animation', () => {
     for (const key of NUMERIC_POSE_KEYS) expect(end[key]).toBeCloseTo(start[key], 3);
   });
 
+  it('has its own animation for every exercise', () => {
+    const missing = [...EXERCISES.keys()].filter((id) => getAnimation(id) === PLACEHOLDER);
+    expect(missing).toEqual([]);
+  });
+
+  it('honours transition weights (breathing: 4 s in, 6 s out)', () => {
+    const breathing = getAnimation('slow-breathing');
+    expect(poseAt(breathing, 4)).toEqual(keyPose(breathing, 'B'));
+    expect(poseAt(breathing, 0)).toEqual(keyPose(breathing, 'A'));
+  });
+
   it('falls back to the placeholder for unknown exercises', () => {
     expect(getAnimation('does-not-exist')).toBe(PLACEHOLDER);
   });

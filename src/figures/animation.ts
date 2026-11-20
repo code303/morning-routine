@@ -2,17 +2,22 @@ import { NUMERIC_POSE_KEYS, type Pose } from './skeleton';
 
 export type KeyName = 'A' | 'B' | 'C' | 'D';
 
+/** Hilfsobjekte, in Figur-Einheiten (x relativ zur Hüfte). */
+export type Prop = { readonly kind: 'wall'; readonly x: number };
+
 export interface ExerciseAnimation {
   readonly poses: Readonly<Partial<Record<KeyName, Pose>>>;
   /** Abfolge der Schlüsselposen; die Schleife kehrt vom letzten zum ersten Eintrag zurück. */
   readonly sequence: readonly KeyName[];
   /** Dauer eines vollständigen Durchlaufs in Sekunden. */
   readonly loopSeconds: number;
-  /** Hilfsobjekte, die mitgezeichnet werden. */
-  readonly props?: readonly PropName[];
+  /**
+   * Relative Dauer der Übergänge (sequence[i] → sequence[i+1], der letzte zurück zum ersten).
+   * Standard: alle gleich lang.
+   */
+  readonly weights?: readonly number[];
+  readonly props?: readonly Prop[];
 }
-
-export type PropName = 'wall' | 'chair';
 
 export function easeInOutSine(t: number): number {
   return -(Math.cos(Math.PI * t) - 1) / 2;
@@ -39,11 +44,20 @@ export function poseAt(anim: ExerciseAnimation, seconds: number): Pose {
   const first = keys[0];
   if (!first) throw new Error('Leere Abfolge');
   if (keys.length === 1 || anim.loopSeconds <= 0) return keyPose(anim, first);
-  const segment = anim.loopSeconds / keys.length;
+
+  const weights = anim.weights ?? keys.map(() => 1);
+  const weightSum = weights.reduce((a, b) => a + b, 0);
   const t = ((seconds % anim.loopSeconds) + anim.loopSeconds) % anim.loopSeconds;
-  const i = Math.min(keys.length - 1, Math.floor(t / segment));
-  const from = keys[i] ?? first;
-  const to = keys[(i + 1) % keys.length] ?? first;
-  const local = (t - i * segment) / segment;
-  return lerpPose(keyPose(anim, from), keyPose(anim, to), easeInOutSine(local));
+  let cursor = 0;
+  for (let i = 0; i < keys.length; i++) {
+    const span = ((weights[i] ?? 1) / weightSum) * anim.loopSeconds;
+    if (t < cursor + span || i === keys.length - 1) {
+      const from = keys[i] ?? first;
+      const to = keys[(i + 1) % keys.length] ?? first;
+      const local = span > 0 ? Math.min(1, (t - cursor) / span) : 1;
+      return lerpPose(keyPose(anim, from), keyPose(anim, to), easeInOutSine(local));
+    }
+    cursor += span;
+  }
+  return keyPose(anim, first);
 }
