@@ -1,14 +1,16 @@
 import { approxMinutes, baseBounds, clampBase, totalSeconds } from '../core/bounds';
-import { hasVariants } from '../core/plan';
+import { buildPlan, hasVariants } from '../core/plan';
 import type { DayVariant, Mode, ModeId } from '../core/types';
+import { getExercise } from '../data/exercises';
 import { BLOOD_PRESSURE_NOTE } from '../data/modes';
-import { el, setText } from './dom';
+import { el, formatClock, setText } from './dom';
 
 export interface StartOptions {
   readonly modes: readonly Mode[];
   readonly initialMode: ModeId;
   readonly initialBase: (mode: Mode) => number | null;
   readonly today: DayVariant;
+  readonly onChange?: (mode: Mode, base: number | null) => void;
   readonly onStart: (mode: Mode, base: number | null) => void;
 }
 
@@ -32,9 +34,25 @@ export function renderStart(root: HTMLElement, options: StartOptions): void {
   const day = el('p', { class: 'day-badge' });
   const note = el('p', { class: 'mode-note' }, BLOOD_PRESSURE_NOTE);
   const startButton = el('button', { type: 'button', class: 'btn btn-primary btn-start' }, 'Start');
+  const stepList = el('ol', { class: 'step-list' });
+  const stepCount = el('span', {});
+  const steps = el('details', { class: 'steps' }, el('summary', {}, stepCount), stepList);
+
+  const renderSteps = () => {
+    if (!mode) return;
+    const plan = buildPlan(mode, base, options.today);
+    setText(stepCount, `${plan.steps.length} Übungen anzeigen`);
+    stepList.replaceChildren(
+      ...plan.steps.map((s) =>
+        el('li', {}, el('span', {}, getExercise(s.exerciseId).name), el('span', { class: 'step-time' }, formatClock(s.seconds))),
+      ),
+    );
+  };
 
   const refresh = () => {
     if (!mode) return;
+    options.onChange?.(mode, base);
+    renderSteps();
     for (const tile of tiles.children) {
       const selected = (tile as HTMLElement).dataset.mode === mode.id;
       tile.setAttribute('aria-checked', String(selected));
@@ -98,6 +116,7 @@ export function renderStart(root: HTMLElement, options: StartOptions): void {
       note,
       sliderBlock,
       total,
+      steps,
       startButton,
     ),
   );

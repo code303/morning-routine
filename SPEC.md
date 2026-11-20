@@ -227,6 +227,7 @@ Die Farbwerte stammen aus dem shadcn-Preset `b5fybI` (`npx shadcn@latest init --
 - TypeScript 5.9 (strict), Vite 8.x, `vite-plugin-pwa` (Workbox)
 - Tests: Vitest 5.x; Playwright für einen E2E-Rauchtest
 - Keine Laufzeitabhängigkeiten außer dem Service-Worker-Runtime von Workbox
+- Bekannt (Stand 2026-11-20): `npm audit` meldet 4 „moderate“ Lücken in `glob`/`minimatch`, die über `workbox-build` nur beim Build genutzt werden. Der vorgeschlagene Fix stuft auf eine inkompatible Version zurück. Die Lücken werden akzeptiert, bis `vite-plugin-pwa` aktualisiert.
 
 ## Commands
 

@@ -36,6 +36,7 @@ export function breathState(step: PlannedStep, stepElapsed: number): { size: num
 export function runSession(root: HTMLElement, options: SessionOptions): void {
   const { plan, clock, beeper, wakeLock } = options;
   const session = createSession(plan, clock);
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const progress = el('span', { class: 'progress-count' });
   const remaining = el('span', { class: 'progress-remaining' });
@@ -161,7 +162,9 @@ export function runSession(root: HTMLElement, options: SessionOptions): void {
     setText(countdown, String(Math.ceil(state.phaseRemaining)));
     setText(remaining, `noch ${formatClock(state.totalRemaining)}`);
     bar.style.width = `${(state.elapsed / session.total) * 100}%`;
-    figure?.update(stepElapsed);
+    // Reduzierte Bewegung: langsamer, aber nicht aus – außer beim Atmen, das im Takt bleiben muss.
+    const motion = reducedMotion && step?.segments?.kind !== 'breath' ? 0.5 : 1;
+    figure?.update(stepElapsed * motion);
 
     if (state.status === 'done') {
       cleanup();

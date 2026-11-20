@@ -71,9 +71,9 @@ Projekt-Setup (1)
 **Checkpoint C:** Alle vier Modi und alle Figuren sind vorhanden. Erfolgskriterien 3–7, 9, 10 und 12 sind erfüllt. Danach Rückmeldung zu den Figuren.
 
 ### Phase 4: PWA und Abschluss
-- [ ] Task 13: PWA: Manifest, Icons, Service Worker, Offline-Betrieb
-- [ ] Task 14: Politur: Lesbarkeit aus 2 m, Hoch/Quer, Dunkelmodus, Übungsliste, Speicher
-- [ ] Task 15: E2E-Rauchtest (Playwright)
+- [x] Task 13: PWA: Manifest, Icons, Service Worker, Offline-Betrieb
+- [x] Task 14: Politur: Lesbarkeit aus 2 m, Hoch/Quer, Dunkelmodus, Übungsliste, Speicher
+- [x] Task 15: E2E-Rauchtest (Playwright)
 - [ ] Task 16: Deployment auf GitHub Pages (**erst nach Rückfrage**)
 
 **Checkpoint D:** Alle 12 Erfolgskriterien der Spec erfüllt, manuelle Prüfung auf dem Android-Handy bestanden.

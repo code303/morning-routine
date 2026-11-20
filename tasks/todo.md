@@ -222,7 +222,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 
 ## Phase 4: PWA und Abschluss
 
-### - [ ] Task 13: PWA
+### - [x] Task 13: PWA
 
 **Beschreibung:** `vite-plugin-pwa` einbinden, Manifest anlegen (Name, `display: standalone`, Farben), Icons 192/512 und maskable erstellen und alle Dateien vorab cachen.
 
@@ -235,7 +235,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `vite.config.ts`, `package.json`, `public/icons/*`, `index.html`
 **Umfang:** S
 
-### - [ ] Task 14: Politur und Speicher
+### - [x] Task 14: Politur und Speicher
 
 **Beschreibung:**
 - **Lesbarkeit und Layout:** aus 2 m lesbar (Schriftgrößen, Kontrast), Layout für Hoch- und Querformat, Dunkel- und Hellmodus.
@@ -253,7 +253,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `src/styles.css`, `src/ui/start.ts`, `src/platform/storage.ts`, `tests/storage.test.ts`
 **Umfang:** M
 
-### - [ ] Task 15: E2E-Rauchtest
+### - [x] Task 15: E2E-Rauchtest
 
 **Beschreibung:** Playwright mit Chromium gegen `npm run preview` einrichten. Ablauf: Modus wechseln, Regler bewegen, prüfen, dass sich die Gesamtdauer ändert, Start drücken und mit `?speed` den ersten Schrittwechsel abwarten.
 
