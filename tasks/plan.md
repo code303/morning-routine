@@ -54,9 +54,9 @@ Projekt-Setup (1)
 **Checkpoint A:** Tests und Typecheck grün, Kernlogik für den Original-Modus vollständig.
 
 ### Phase 2: Erste lauffähige Version
-- [ ] Task 4: UI-Slice: Start, Routine, Fertig im Original-Modus (Text-Countdown, Platzhalter-Figur)
-- [ ] Task 5: Skelett, SVG-Renderer und Interpolation (Nachweis an Arm Swings + Horse Stance)
-- [ ] Task 6: Töne, Wake Lock, automatische Pause im Hintergrund
+- [x] Task 4: UI-Slice: Start, Routine, Fertig im Original-Modus (Text-Countdown, Platzhalter-Figur)
+- [x] Task 5: Skelett, SVG-Renderer und Interpolation (Nachweis an Arm Swings + Horse Stance)
+- [x] Task 6: Töne, Wake Lock, automatische Pause im Hintergrund
 
 **Checkpoint B:** Der Original-Modus läuft im Handy-Browser (Dev-Server) ohne Berührung durch, mit Tönen und anbleibendem Bildschirm. Danach Rückmeldung von dir.
 

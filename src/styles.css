@@ -67,3 +67,228 @@ body {
   min-height: 100dvh;
   padding: 16px;
 }
+
+/* ---------- Layout ---------- */
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+  margin: 0 auto;
+  min-height: calc(100dvh - 32px);
+}
+
+.title {
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  margin: 8px 0 0;
+}
+
+.btn {
+  font: inherit;
+  font-weight: 600;
+  font-size: 1.125rem;
+  border: 0;
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  cursor: pointer;
+}
+.btn:focus-visible,
+.mode-tile:focus-visible,
+.slider:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.btn-secondary {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+}
+.btn-start {
+  margin-top: auto;
+  font-size: 1.5rem;
+  padding: 20px;
+}
+
+/* ---------- Start ---------- */
+.mode-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+.mode-tile {
+  font: inherit;
+  font-weight: 600;
+  font-size: 1.125rem;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--card-foreground);
+  border: 2px solid var(--border);
+  cursor: pointer;
+}
+.mode-tile[aria-checked='true'] {
+  border-color: var(--primary-strong);
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+.mode-description {
+  margin: 0;
+  color: var(--muted-foreground);
+}
+.slider-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.slider-block[hidden] {
+  display: none;
+}
+.slider-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.125rem;
+}
+.slider-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.slider {
+  width: 100%;
+  accent-color: var(--primary-strong);
+  height: 32px;
+}
+.total {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ---------- Session ---------- */
+.screen-session {
+  gap: 8px;
+}
+.session-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.125rem;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.progress-track {
+  height: 6px;
+  background: var(--muted);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--primary);
+}
+.figure-box {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.figure {
+  width: 100%;
+  height: 100%;
+  max-height: 46dvh;
+}
+.figure-limb {
+  stroke: var(--foreground);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+.figure-far {
+  opacity: 0.45;
+}
+.figure-head {
+  fill: none;
+  stroke: var(--foreground);
+  stroke-width: 6;
+}
+.figure-ground {
+  stroke: var(--muted-foreground);
+  stroke-width: 2;
+}
+.session-info {
+  text-align: center;
+}
+.upcoming {
+  margin: 0;
+  min-height: 1.4em;
+  font-size: 1.25rem;
+  color: var(--muted-foreground);
+}
+.exercise-name {
+  margin: 0;
+  font-size: clamp(1.75rem, 7vw, 3rem);
+}
+.exercise-hint {
+  margin: 4px 0 0;
+  font-size: 1.125rem;
+  color: var(--muted-foreground);
+}
+.countdown {
+  font-size: clamp(5rem, 28vw, 11rem);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.is-transition .countdown,
+.is-transition .figure {
+  opacity: 0.55;
+}
+.is-final-seconds .countdown {
+  color: var(--primary-strong);
+}
+.paused-banner {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.paused-banner[hidden] {
+  display: none;
+}
+.session-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* Querformat: Figur links, Infos rechts */
+@media (orientation: landscape) and (max-height: 600px) {
+  .screen-session {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto 1fr auto;
+    max-width: none;
+  }
+  .session-top,
+  .progress-track {
+    grid-column: 1 / -1;
+  }
+  .figure-box {
+    grid-row: 3 / 5;
+  }
+  .figure {
+    max-height: 80dvh;
+  }
+  .countdown {
+    font-size: clamp(4rem, 22vh, 9rem);
+  }
+}
+
+/* ---------- Fertig ---------- */
+.done-duration {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}

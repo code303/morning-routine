@@ -58,7 +58,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 
 ## Phase 2: Erste lauffähige Version
 
-### - [ ] Task 4: UI-Slice im Original-Modus
+### - [x] Task 4: UI-Slice im Original-Modus
 
 **Beschreibung:**
 - **Start:** Regler mit Sekundenwert, „≈ N min“, Start-Button.
@@ -79,7 +79,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `src/ui/start.ts`, `src/ui/session.ts`, `src/ui/done.ts`, `src/main.ts`, `src/styles.css`
 **Umfang:** M
 
-### - [ ] Task 5: Skelett, Renderer und Interpolation
+### - [x] Task 5: Skelett, Renderer und Interpolation
 
 **Beschreibung:**
 - **Datenformat:** Pose (Gelenkwinkel, Wurzelposition/-rotation, Ansicht frontal/seitlich).
@@ -98,7 +98,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `src/figures/skeleton.ts`, `src/figures/render.ts`, `src/figures/poses.ts`, `tests/figures.test.ts`
 **Umfang:** M
 
-### - [ ] Task 6: Töne, Wake Lock, Hintergrund-Pause
+### - [x] Task 6: Töne, Wake Lock, Hintergrund-Pause (Gerätetest am Checkpoint B offen)
 
 **Beschreibung:**
 - **Töne:** `beeper.ts` mit den vier Tönen aus der Spec, angehängt an die Ereignisse des Automaten. `AudioContext` beim Tippen auf Start.
