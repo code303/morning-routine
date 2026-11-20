@@ -122,8 +122,13 @@ Pause = Arm Swings 30 s + Dead Arms 30 s + Atmung 60 s
    - große animierte Figur
    - Übungsname, ein Satz Ausführungshinweis
    - großer Countdown
-   - Fortschritt („7 / 19“) und Restzeit gesamt
-   - Buttons ‹ (vorherige Übung), Pause/Fortsetzen, › (nächste Übung) und Beenden. ‹ springt an den Anfang der vorherigen Übung (in der ersten: von vorn), › an den Anfang der nächsten; in einer Wechselpause gilt die angekündigte bzw. die gerade beendete Übung. Ein Sprung behält den Pausenzustand bei.
+   - Kopfzeile: Fortschritt („7 / 19“), Restzeit gesamt und oben rechts ✕ „Routine beenden“, räumlich getrennt von den häufig benutzten Tasten
+   - Beenden fragt nach („Routine beenden?“ mit „Weitermachen“ und „Beenden“). Während der Rückfrage pausiert die Routine; „Weitermachen“ stellt den vorherigen Zustand wieder her.
+   - Steuerleiste unten wie bei einem Musikplayer: ⏮ | Pause/Fortsetzen | ⏭ im Verhältnis 1 : 1,5 : 1, mindestens 64 px hoch, Icons als SVG
+     - ⏭ springt an den Anfang der nächsten Übung, in einer Wechselpause in die angekündigte; in der letzten Übung deaktiviert.
+     - ⏮ startet nach mehr als 3 s die aktuelle Übung neu, sonst geht es zur vorherigen (in der ersten: von vorn; in einer Wechselpause: zur gerade beendeten).
+     - Ein Sprung behält den Pausenzustand bei.
+   - Unter der Steuerleiste: „Nächste: <Name>“ bzw. „Letzte Übung“ – zeigt, wohin ⏭ führt
    - In der 5-s-Wechselpause steht „Gleich: <Name>“ und die nächste Figur wird gezeigt.
 3. **Fertig:** „Geschafft“, tatsächliche Dauer, Button zurück zum Start.
 

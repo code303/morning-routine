@@ -246,8 +246,11 @@ const ANIMATIONS: Readonly<Record<ExerciseId, ExerciseAnimation>> = {
   'dead-bug': {
     poses: {
       A: pose('side', { rotation: 90, shoulderL: 90, shoulderR: 90, hipL: 90, kneeL: -90, hipR: 90, kneeR: -90 }),
-      B: pose('side', { rotation: 90, shoulderL: 90, shoulderR: -165, hipL: 12, kneeL: 0, hipR: 90, kneeR: -90 }),
-      C: pose('side', { rotation: 90, shoulderL: -165, shoulderR: 90, hipL: 90, kneeL: -90, hipR: 12, kneeR: 0 }),
+      // Gestreckter Arm/Bein knapp ÜBER dem Boden – zeigten sie darunter, würde die Figur
+      // auf Hand/Fuß gestellt und der Rumpf höbe ab. Arm 90 → 170 schwingt über Kopf
+      // (nicht −190, das liefe beim Interpolieren durch den Boden).
+      B: pose('side', { rotation: 90, shoulderL: 90, shoulderR: 170, hipL: 12, kneeL: 0, hipR: 90, kneeR: -90 }),
+      C: pose('side', { rotation: 90, shoulderL: 170, shoulderR: 90, hipL: 90, kneeL: -90, hipR: 12, kneeR: 0 }),
     },
     sequence: ['A', 'B', 'A', 'C'],
     loopSeconds: 8,

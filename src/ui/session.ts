@@ -16,6 +16,19 @@ export interface SessionOptions {
   readonly onCancel: () => void;
 }
 
+/** Statische SVG-Icons (Unicode-Symbole würden auf Android als Emoji erscheinen). */
+const ICONS = {
+  previous: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2.5v14H6zM19 5v14L9.5 12z"/></svg>',
+  next: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5H18v14h-2.5zM5 5v14l9.5-7z"/></svg>',
+  close: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4 6.4 19 5 17.6 10.6 12 5 6.4z"/></svg>',
+} as const;
+
+function iconButton(icon: keyof typeof ICONS, label: string, className: string): HTMLButtonElement {
+  const button = el('button', { type: 'button', class: className, 'aria-label': label, title: label });
+  button.innerHTML = ICONS[icon];
+  return button;
+}
+
 /** Vorschau auf die nächste Übung, wenn ein Modus keine Wechselpause hat (Blutdruck). */
 const PREVIEW_SECONDS = 5;
 
@@ -51,21 +64,38 @@ export function runSession(root: HTMLElement, options: SessionOptions): void {
   const breath = el('div', { class: 'breath', hidden: true }, breathCircle, breathLabel);
   const stage = el('div', { class: 'stage' }, figureBox, breath);
   const pauseButton = el('button', { type: 'button', class: 'btn btn-primary' }, 'Pause');
-  const stopButton = el('button', { type: 'button', class: 'btn btn-secondary' }, 'Beenden');
-  const prevButton = el('button', { type: 'button', class: 'btn btn-secondary btn-nav', 'aria-label': 'Vorherige Übung' }, '‹');
-  const nextButton = el('button', { type: 'button', class: 'btn btn-secondary btn-nav', 'aria-label': 'Nächste Übung' }, '›');
+  const stopButton = iconButton('close', 'Routine beenden', 'icon-btn');
+  const prevButton = iconButton('previous', 'Vorherige Übung', 'btn btn-secondary btn-nav');
+  const nextButton = iconButton('next', 'Nächste Übung', 'btn btn-secondary btn-nav');
+  const nextLabel = el('p', { class: 'next-label' });
+
+  // Rückfrage vor dem Beenden – In-Page-Dialog statt window.confirm
+  const cancelStop = el('button', { type: 'button', class: 'btn btn-secondary' }, 'Weitermachen');
+  const confirmStop = el('button', { type: 'button', class: 'btn btn-destructive' }, 'Beenden');
+  const confirmDialog = el(
+    'div',
+    { class: 'confirm-backdrop', hidden: true },
+    el(
+      'div',
+      { class: 'confirm', role: 'alertdialog', 'aria-modal': 'true', 'aria-labelledby': 'confirm-title' },
+      el('h2', { id: 'confirm-title', class: 'confirm-title' }, 'Routine beenden?'),
+      el('p', { class: 'confirm-text' }, 'Der Fortschritt dieser Runde geht verloren.'),
+      el('div', { class: 'confirm-actions' }, cancelStop, confirmStop),
+    ),
+  );
   const pausedBanner = el('p', { class: 'paused-banner', hidden: true }, 'Pausiert');
 
   root.replaceChildren(
     el(
       'section',
       { class: 'screen screen-session' },
-      el('header', { class: 'session-top' }, progress, remaining),
+      el('header', { class: 'session-top' }, progress, remaining, stopButton),
       el('div', { class: 'progress-track' }, bar),
       stage,
       el('div', { class: 'session-info' }, upcoming, name, hint, countdown, pausedBanner),
-      el('footer', { class: 'session-actions' }, prevButton, pauseButton, nextButton, stopButton),
+      el('footer', { class: 'session-controls' }, el('div', { class: 'session-actions' }, prevButton, pauseButton, nextButton), nextLabel),
     ),
+    confirmDialog,
   );
 
   let figure: FigureHandle | null = null;
@@ -151,7 +181,10 @@ export function runSession(root: HTMLElement, options: SessionOptions): void {
       setText(name, exercise.name);
       setText(hint, exercise.hint);
       setText(progress, `${phase.index + 1} / ${plan.steps.length}`);
-      nextButton.disabled = phase.kind === 'step' && phase.index === plan.steps.length - 1;
+      // › führt in einer Wechselpause zur angekündigten, sonst zur folgenden Übung
+      const nextTarget = plan.steps[inTransition ? phase.index : phase.index + 1];
+      nextButton.disabled = !nextTarget;
+      setText(nextLabel, nextTarget ? `Nächste: ${getExercise(nextTarget.exerciseId).name}` : 'Letzte Übung');
       root.classList.toggle('is-transition', inTransition);
       root.classList.toggle('is-final-seconds', !inTransition && state.phaseRemaining <= 3);
 
@@ -182,7 +215,23 @@ export function runSession(root: HTMLElement, options: SessionOptions): void {
   pauseButton.addEventListener('click', () => setPaused(!paused));
   prevButton.addEventListener('click', () => session.previous());
   nextButton.addEventListener('click', () => session.next());
+  let resumeAfterDialog = false;
+  const closeDialog = () => {
+    confirmDialog.hidden = true;
+    if (resumeAfterDialog) setPaused(false);
+  };
   stopButton.addEventListener('click', () => {
+    // Während der Rückfrage läuft die Zeit nicht weiter.
+    resumeAfterDialog = !paused;
+    if (!paused) setPaused(true);
+    confirmDialog.hidden = false;
+    cancelStop.focus();
+  });
+  cancelStop.addEventListener('click', closeDialog);
+  confirmDialog.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDialog();
+  });
+  confirmStop.addEventListener('click', () => {
     session.stop();
     cleanup();
     options.onCancel();

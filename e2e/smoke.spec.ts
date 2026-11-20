@@ -44,7 +44,57 @@ test('routine runs: first step, transition preview, second step', async ({ page 
   await expect(page.locator('.progress-count')).toHaveText('2 / 9', { timeout: 5_000 });
   await expect(page.locator('.exercise-name')).toHaveText('Body Wave');
 
-  await page.getByRole('button', { name: 'Beenden' }).click();
+  await page.getByRole('button', { name: 'Routine beenden' }).click();
+  await page.getByRole('alertdialog').getByRole('button', { name: 'Beenden' }).click();
+  await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
+});
+
+test('navigation: next/previous buttons and the "Nächste" label', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('radio', { name: 'Original' }).click();
+  await page.getByRole('button', { name: 'Start' }).click();
+
+  await expect(page.locator('.next-label')).toHaveText('Nächste: Body Wave');
+  await page.getByRole('button', { name: 'Nächste Übung' }).click();
+  await expect(page.locator('.exercise-name')).toHaveText('Body Wave');
+  await expect(page.locator('.next-label')).toHaveText('Nächste: Arm Swings');
+
+  // innerhalb der ersten 3 s: zurück zur vorherigen Übung
+  await page.getByRole('button', { name: 'Vorherige Übung' }).click();
+  await expect(page.locator('.exercise-name')).toHaveText('Lymphatic Hops');
+
+  for (let i = 0; i < 8; i++) await page.getByRole('button', { name: 'Nächste Übung' }).click();
+  await expect(page.locator('.exercise-name')).toHaveText('Horse Stance');
+  await expect(page.getByRole('button', { name: 'Nächste Übung' })).toBeDisabled();
+  await expect(page.locator('.next-label')).toHaveText('Letzte Übung');
+});
+
+test('stopping asks for confirmation and pauses meanwhile', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('radio', { name: 'Original' }).click();
+  await page.getByRole('button', { name: 'Start' }).click();
+
+  await page.getByRole('button', { name: 'Routine beenden' }).click();
+  const dialog = page.getByRole('alertdialog', { name: 'Routine beenden?' });
+  await expect(dialog).toBeVisible();
+  await expect(page.locator('.paused-banner')).toBeVisible();
+  const frozen = await page.locator('.countdown').textContent();
+  await page.waitForTimeout(1500);
+  await expect(page.locator('.countdown')).toHaveText(frozen ?? '');
+
+  // Weitermachen: Dialog zu, Routine läuft wieder
+  await dialog.getByRole('button', { name: 'Weitermachen' }).click();
+  await expect(dialog).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
+
+  // War vorher pausiert, bleibt es nach „Weitermachen“ pausiert
+  await page.getByRole('button', { name: 'Pause' }).click();
+  await page.getByRole('button', { name: 'Routine beenden' }).click();
+  await dialog.getByRole('button', { name: 'Weitermachen' }).click();
+  await expect(page.getByRole('button', { name: 'Fortsetzen' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Routine beenden' }).click();
+  await dialog.getByRole('button', { name: 'Beenden' }).click();
   await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
 });
 

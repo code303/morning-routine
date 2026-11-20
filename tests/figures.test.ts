@@ -67,6 +67,15 @@ describe('animation', () => {
     expect(poseAt(breathing, 0)).toEqual(keyPose(breathing, 'A'));
   });
 
+  it.each(['dead-bug', 'bird-dog'])('%s keeps the torso on the same height throughout the loop', (id) => {
+    const anim = getAnimation(id);
+    const reference = solve(keyPose(anim, anim.sequence[0] ?? 'A')).hip.y;
+    for (let i = 0; i <= 200; i++) {
+      const t = (anim.loopSeconds * i) / 200;
+      expect(solve(poseAt(anim, t)).hip.y, `t = ${t.toFixed(2)} s`).toBeCloseTo(reference, 3);
+    }
+  });
+
   it('falls back to the placeholder for unknown exercises', () => {
     expect(getAnimation('does-not-exist')).toBe(PLACEHOLDER);
   });

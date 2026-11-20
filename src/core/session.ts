@@ -50,13 +50,19 @@ export interface Session {
   jumpTo(index: number): void;
   /** Nächster Schritt (in einer Wechselpause: der angekündigte). Kein Sprung hinter den letzten. */
   next(): void;
-  /** Vorheriger Schritt (in einer Wechselpause: der gerade beendete); im ersten Schritt: von vorn. */
+  /**
+   * Nach mehr als 3 s im Schritt: aktuellen Schritt neu starten; sonst vorheriger Schritt
+   * (in einer Wechselpause: der gerade beendete; im ersten Schritt: von vorn).
+   */
   previous(): void;
   readonly timeline: readonly Phase[];
   readonly total: number;
 }
 
 const COUNTDOWN = [3, 2, 1] as const;
+
+/** „Zurück“ startet nach so vielen Sekunden die aktuelle Übung neu statt zur vorherigen zu springen. */
+export const RESTART_THRESHOLD_SECONDS = 3;
 
 /** Zeitleiste aller Phasen: Schritt, Wechselpause, Schritt, … */
 export function buildTimeline(plan: Plan): Phase[] {
@@ -184,8 +190,12 @@ export function createSession(plan: Plan, clock: Clock): Session {
       if (target < plan.steps.length) jumpTo(target);
     },
     previous() {
-      const phase = phaseAt(elapsedSeconds());
-      jumpTo(Math.max(0, phase.index - 1));
+      // Wie bei einem Musikplayer: nach den ersten Sekunden die aktuelle Übung neu starten,
+      // sonst zur vorherigen. In einer Wechselpause zurück zur gerade beendeten Übung.
+      const elapsed = elapsedSeconds();
+      const phase = phaseAt(elapsed);
+      if (phase.kind === 'step' && elapsed - phase.start > RESTART_THRESHOLD_SECONDS) jumpTo(phase.index);
+      else jumpTo(Math.max(0, phase.index - 1));
     },
   };
 

@@ -162,7 +162,7 @@ describe('session state', () => {
     expect(r.state.elapsed).toBe(35);
     expect(r.events.map(describeEvent)).toEqual(['35:start#1']);
 
-    advance(5);
+    advance(2); // innerhalb der ersten 3 s → vorherige Übung
     s.previous();
     r = s.tick();
     expect(r.state.phase).toMatchObject({ kind: 'step', index: 0 });
@@ -172,6 +172,19 @@ describe('session state', () => {
     // Countdown des wiederholten Schritts erklingt erneut
     advance(27);
     expect(s.tick().events.map(describeEvent)).toEqual(['27:cd3#0']);
+  });
+
+  it('previous restarts the current step after the first 3 s, otherwise goes back', () => {
+    const { clock, advance } = fakeClock();
+    const s = createSession(twoSteps, clock);
+    s.start();
+    s.jumpTo(1);
+    advance(3.5);
+    s.previous();
+    expect(s.tick().state).toMatchObject({ phase: { kind: 'step', index: 1 }, elapsed: 35 });
+    advance(3);
+    s.previous();
+    expect(s.tick().state).toMatchObject({ phase: { kind: 'step', index: 0 }, elapsed: 0 });
   });
 
   it('previous on the first step restarts it; next on the last step does nothing', () => {
