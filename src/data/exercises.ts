@@ -2,11 +2,11 @@ import type { Exercise, ExerciseId } from '../core/types';
 
 const list = [
   { id: 'lymphatic-hops', name: 'Lymphatic Hops', hint: 'Kleine federnde Sprünge auf den Fußballen, Knie weich.' },
-  { id: 'body-wave', name: 'Body Wave', hint: 'Wirbel für Wirbel nach unten rollen und wieder aufrichten, ca. 4 s pro Welle.' },
+  { id: 'body-wave', name: 'Body Wave', hint: 'In die Knie gehen, Oberkörper bleibt aufrecht; Arme schwingen mit, ca. 4 s pro Welle.' },
   { id: 'arm-swings', name: 'Arm Swings', hint: 'Arme wechselseitig locker vor und zurück pendeln, Schultern entspannt.' },
   { id: 'dead-arms', name: 'Dead Arms', hint: 'Arme völlig schlaff, Rumpf dreht, Arme schwingen um den Körper.' },
-  { id: 'trunk-twist', name: 'Trunk Twist', hint: 'Becken bleibt frontal, nur der Oberkörper dreht.' },
-  { id: 'marching-claps', name: 'Marching Claps', hint: 'Knie auf Hüfthöhe, gegenüberliegende Hand tippt ans Knie.' },
+  { id: 'trunk-twist', name: 'Trunk Twist', hint: 'Hände auf den Schultern, Ellbogen außen; Becken bleibt frontal, nur der Oberkörper dreht.' },
+  { id: 'marching-claps', name: 'Marching Claps', hint: 'Knie auf Hüfthöhe, beide Hände klatschen ans Knie, dann Arme gestreckt nach hinten federn.' },
   { id: 'golf-swings', name: 'Golf Swings', hint: 'Hände zusammen, ganzer Körper rotiert, hintere Ferse dreht mit.' },
   { id: 'ballet-squats', name: 'Ballet Squats', hint: 'Breiter Stand, Zehen ausgedreht, Knie über den Zehen, Rumpf aufrecht.' },
   { id: 'horse-stance', name: 'Horse Stance', hint: 'Tief sitzen, Rumpf senkrecht, ruhig atmen – nicht pressen.' },

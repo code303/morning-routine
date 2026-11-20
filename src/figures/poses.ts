@@ -32,12 +32,12 @@ const ANIMATIONS: Readonly<Record<ExerciseId, ExerciseAnimation>> = {
     loopSeconds: 0.55,
   },
 
-  // Seitenansicht: Arme über Kopf → Brust vor, Knie beugen → flache Hocke, Rücken rund, Arme hinten.
+  // Seitenansicht: Arme über Kopf → in die Knie gehen, Oberkörper bleibt aufrecht → tiefe Hocke, Arme hinten.
   'body-wave': {
     poses: {
-      A: pose('side', { lean: -8, neck: -6, shoulderL: 170, shoulderR: 170 }),
-      B: pose('side', { lean: 22, neck: 8, shoulderL: 115, elbowL: 10, shoulderR: 115, elbowR: 10, hipL: 25, kneeL: -40, hipR: 25, kneeR: -40 }),
-      C: pose('side', { lean: 42, neck: 22, shoulderL: -45, shoulderR: -45, hipL: 55, kneeL: -80, hipR: 55, kneeR: -80 }),
+      A: pose('side', { lean: -4, neck: -4, shoulderL: 170, shoulderR: 170 }),
+      B: pose('side', { lean: 4, shoulderL: 70, elbowL: 10, shoulderR: 70, elbowR: 10, hipL: 45, kneeL: -80, hipR: 45, kneeR: -80, ankleL: 10, ankleR: 10 }),
+      C: pose('side', { lean: 8, shoulderL: -40, shoulderR: -40, hipL: 75, kneeL: -130, hipR: 75, kneeR: -130, ankleL: 25, ankleR: 25 }),
     },
     sequence: ['A', 'B', 'C', 'B'],
     loopSeconds: 4,
@@ -64,23 +64,25 @@ const ANIMATIONS: Readonly<Record<ExerciseId, ExerciseAnimation>> = {
     loopSeconds: 2,
   },
 
-  // Frontansicht: Becken frontal, Oberkörper dreht, Arme folgen dem Schwung.
+  // Frontansicht: Hände auf den Schultern, Ellbogen außen; Becken frontal, nur der Oberkörper dreht.
+  // Bei der Drehung rückt der vordere Ellbogen zur Mitte, der hintere bleibt außen.
   'trunk-twist': {
     poses: {
-      A: pose('front', { shoulderSpread: 0.35, shoulderR: -70, elbowR: -50, shoulderL: -80, elbowL: -10, hipL: -10, kneeL: 8, hipR: 10, kneeR: -8 }),
-      B: pose('front', { shoulderL: -35, elbowL: -20, shoulderR: 35, elbowR: 20, hipL: -10, kneeL: 8, hipR: 10, kneeR: -8 }),
-      C: pose('front', { shoulderSpread: 0.35, shoulderL: 70, elbowL: 50, shoulderR: 80, elbowR: 10, hipL: -10, kneeL: 8, hipR: 10, kneeR: -8 }),
+      A: pose('front', { shoulderSpread: 0.35, shoulderL: -75, elbowL: -150, shoulderR: -60, elbowR: 120, hipL: -10, kneeL: 8, hipR: 10, kneeR: -8 }),
+      B: pose('front', { shoulderL: -72, elbowL: -150, shoulderR: 72, elbowR: 150, hipL: -10, kneeL: 8, hipR: 10, kneeR: -8 }),
+      C: pose('front', { shoulderSpread: 0.35, shoulderR: 75, elbowR: 150, shoulderL: 60, elbowL: -120, hipL: -10, kneeL: 8, hipR: 10, kneeR: -8 }),
     },
     sequence: ['A', 'B', 'C', 'B'],
     loopSeconds: 3,
   },
 
-  // Seitenansicht: Knie auf Hüfthöhe, gegenüberliegende Hand tippt ans Knie, freier Arm schwingt zurück.
+  // Seitenansicht: Knie auf Hüfthöhe, beide Hände klatschen ans Knie,
+  // dann beide Arme gestreckt waagerecht nach hinten federn, Beinwechsel.
   'marching-claps': {
     poses: {
-      A: pose('side', { hipR: 90, kneeR: -90, shoulderL: 30, elbowL: 30, shoulderR: -35, elbowR: 10 }),
-      B: pose('side', { shoulderL: 5, shoulderR: 5 }),
-      C: pose('side', { hipL: 90, kneeL: -90, shoulderR: 30, elbowR: 30, shoulderL: -35, elbowL: 10 }),
+      A: pose('side', { hipR: 90, kneeR: -90, shoulderL: 30, elbowL: 30, shoulderR: 30, elbowR: 30 }),
+      B: pose('side', { shoulderL: -90, shoulderR: -90 }),
+      C: pose('side', { hipL: 90, kneeL: -90, shoulderL: 30, elbowL: 30, shoulderR: 30, elbowR: 30 }),
     },
     sequence: ['A', 'B', 'C', 'B'],
     loopSeconds: 1.6,

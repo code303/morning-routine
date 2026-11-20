@@ -34,6 +34,8 @@ function describeEvent(e: SessionEvent): string {
       return `${e.at}:cd${e.remaining}#${e.index}`;
     case 'transitionStart':
       return `${e.at}:transition→${e.nextIndex}`;
+    case 'stepEnd':
+      return `${e.at}:end#${e.index}`;
     case 'segmentSwitch':
       return `${e.at}:segment${e.segment}#${e.index}`;
     case 'done':
@@ -58,6 +60,15 @@ describe('session timeline', () => {
     const s = createSession({ ...twoSteps, transitionSeconds: 0, totalSeconds: 90 }, clock);
     expect(s.timeline.map((p) => p.kind)).toEqual(['step', 'step']);
   });
+
+  it('ends a step before the next one starts, also without a transition', () => {
+    const { clock, advance } = fakeClock();
+    const s = createSession({ ...twoSteps, transitionSeconds: 0, totalSeconds: 90 }, clock);
+    s.start();
+    advance(30);
+    const types = s.tick().events.map((e) => e.type);
+    expect(types).toEqual(['countdown', 'countdown', 'countdown', 'stepEnd', 'stepStart']);
+  });
 });
 
 describe('session events', () => {
@@ -79,6 +90,7 @@ describe('session events', () => {
       '27:cd3#0',
       '28:cd2#0',
       '29:cd1#0',
+      '30:end#0',
       '30:transition→1',
       '35:start#1',
       '92:cd3#1',
@@ -137,6 +149,92 @@ describe('session state', () => {
     expect(done.state.elapsed).toBe(95);
     advance(100);
     expect(s.tick()).toMatchObject({ state: { status: 'done', elapsed: 95 }, events: [] });
+  });
+
+  it('jumps forward and backward between steps', () => {
+    const { clock, advance } = fakeClock();
+    const s = createSession(twoSteps, clock);
+    s.start();
+    advance(10);
+    s.next();
+    let r = s.tick();
+    expect(r.state.phase).toMatchObject({ kind: 'step', index: 1 });
+    expect(r.state.elapsed).toBe(35);
+    expect(r.events.map(describeEvent)).toEqual(['35:start#1']);
+
+    advance(5);
+    s.previous();
+    r = s.tick();
+    expect(r.state.phase).toMatchObject({ kind: 'step', index: 0 });
+    expect(r.state.elapsed).toBe(0);
+    expect(r.events.map(describeEvent)).toEqual(['0:start#0']);
+
+    // Countdown des wiederholten Schritts erklingt erneut
+    advance(27);
+    expect(s.tick().events.map(describeEvent)).toEqual(['27:cd3#0']);
+  });
+
+  it('previous on the first step restarts it; next on the last step does nothing', () => {
+    const { clock, advance } = fakeClock();
+    const s = createSession(twoSteps, clock);
+    s.start();
+    advance(12);
+    s.previous();
+    expect(s.tick().state.elapsed).toBe(0);
+    s.jumpTo(1);
+    advance(20);
+    s.next();
+    expect(s.tick().state).toMatchObject({ phase: { index: 1 }, elapsed: 55, status: 'running' });
+  });
+
+  it('in a transition, next goes to the announced step and previous to the finished one', () => {
+    const { clock, advance } = fakeClock();
+    const s = createSession(twoSteps, clock);
+    s.start();
+    advance(31);
+    s.tick();
+    s.next();
+    expect(s.tick().state.phase).toMatchObject({ kind: 'step', index: 1, start: 35 });
+    const t = createSession(twoSteps, clock);
+    t.start();
+    advance(31);
+    t.tick();
+    t.previous();
+    expect(t.tick().state.phase).toMatchObject({ kind: 'step', index: 0 });
+  });
+
+  it('keeps a paused session paused when jumping', () => {
+    const { clock, advance } = fakeClock();
+    const s = createSession(twoSteps, clock);
+    s.start();
+    advance(3);
+    s.pause();
+    s.next();
+    advance(100);
+    expect(s.tick().state).toMatchObject({ status: 'paused', elapsed: 35 });
+    s.resume();
+    advance(2);
+    expect(s.tick().state.elapsed).toBeCloseTo(37);
+  });
+
+  it('does not fire the previous stepEnd when jumping in a mode without transitions', () => {
+    const { clock } = fakeClock();
+    const s = createSession({ ...twoSteps, transitionSeconds: 0, totalSeconds: 90 }, clock);
+    s.start();
+    s.tick();
+    s.next();
+    expect(s.tick().events.map((e) => e.type)).toEqual(['stepStart']);
+  });
+
+  it('ignores jumps before start and after stop', () => {
+    const { clock } = fakeClock();
+    const s = createSession(twoSteps, clock);
+    s.next();
+    s.start();
+    expect(s.tick().state.elapsed).toBe(0);
+    s.stop();
+    s.jumpTo(1);
+    expect(s.tick().state).toMatchObject({ status: 'stopped', elapsed: 0 });
   });
 
   it('stops on demand', () => {

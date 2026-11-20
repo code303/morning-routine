@@ -52,6 +52,8 @@ export function runSession(root: HTMLElement, options: SessionOptions): void {
   const stage = el('div', { class: 'stage' }, figureBox, breath);
   const pauseButton = el('button', { type: 'button', class: 'btn btn-primary' }, 'Pause');
   const stopButton = el('button', { type: 'button', class: 'btn btn-secondary' }, 'Beenden');
+  const prevButton = el('button', { type: 'button', class: 'btn btn-secondary btn-nav', 'aria-label': 'Vorherige Übung' }, '‹');
+  const nextButton = el('button', { type: 'button', class: 'btn btn-secondary btn-nav', 'aria-label': 'Nächste Übung' }, '›');
   const pausedBanner = el('p', { class: 'paused-banner', hidden: true }, 'Pausiert');
 
   root.replaceChildren(
@@ -62,7 +64,7 @@ export function runSession(root: HTMLElement, options: SessionOptions): void {
       el('div', { class: 'progress-track' }, bar),
       stage,
       el('div', { class: 'session-info' }, upcoming, name, hint, countdown, pausedBanner),
-      el('footer', { class: 'session-actions' }, pauseButton, stopButton),
+      el('footer', { class: 'session-actions' }, prevButton, pauseButton, nextButton, stopButton),
     ),
   );
 
@@ -85,8 +87,10 @@ export function runSession(root: HTMLElement, options: SessionOptions): void {
 
   const handleEvent = (event: SessionEvent) => {
     switch (event.type) {
+      case 'stepEnd':
+        beeper.stepEnd();
+        break;
       case 'stepStart':
-        beeper.stepStart();
         break;
       case 'countdown':
         beeper.countdown();
@@ -117,7 +121,7 @@ export function runSession(root: HTMLElement, options: SessionOptions): void {
       session.resume();
       void wakeLock.acquire();
     }
-    setText(pauseButton, value ? 'Weiter' : 'Pause');
+    setText(pauseButton, value ? 'Fortsetzen' : 'Pause');
     pausedBanner.hidden = !value;
   };
 
@@ -147,6 +151,7 @@ export function runSession(root: HTMLElement, options: SessionOptions): void {
       setText(name, exercise.name);
       setText(hint, exercise.hint);
       setText(progress, `${phase.index + 1} / ${plan.steps.length}`);
+      nextButton.disabled = phase.kind === 'step' && phase.index === plan.steps.length - 1;
       root.classList.toggle('is-transition', inTransition);
       root.classList.toggle('is-final-seconds', !inTransition && state.phaseRemaining <= 3);
 
@@ -175,6 +180,8 @@ export function runSession(root: HTMLElement, options: SessionOptions): void {
   };
 
   pauseButton.addEventListener('click', () => setPaused(!paused));
+  prevButton.addEventListener('click', () => session.previous());
+  nextButton.addEventListener('click', () => session.next());
   stopButton.addEventListener('click', () => {
     session.stop();
     cleanup();

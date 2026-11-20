@@ -123,7 +123,7 @@ Pause = Arm Swings 30 s + Dead Arms 30 s + Atmung 60 s
    - Übungsname, ein Satz Ausführungshinweis
    - großer Countdown
    - Fortschritt („7 / 19“) und Restzeit gesamt
-   - Buttons Pause/Weiter und Beenden
+   - Buttons ‹ (vorherige Übung), Pause/Fortsetzen, › (nächste Übung) und Beenden. ‹ springt an den Anfang der vorherigen Übung (in der ersten: von vorn), › an den Anfang der nächsten; in einer Wechselpause gilt die angekündigte bzw. die gerade beendete Übung. Ein Sprung behält den Pausenzustand bei.
    - In der 5-s-Wechselpause steht „Gleich: <Name>“ und die nächste Figur wird gezeigt.
 3. **Fertig:** „Geschafft“, tatsächliche Dauer, Button zurück zum Start.
 
@@ -201,9 +201,9 @@ Die Farbwerte stammen aus dem shadcn-Preset `b5fybI` (`npx shadcn@latest init --
 | Ereignis | Ton |
 |---|---|
 | 3, 2, 1 s vor Schrittende | kurzer Piepton, tief |
-| Start eines neuen Schritts | längerer Ton, hoch |
+| Ende eines Schritts (nicht des letzten) | längerer Ton, hoch |
 | Seitenwechsel / Haltewechsel (Segmentgrenze) | Doppelton, mittel |
-| Ende der Routine | aufsteigende Dreitonfolge |
+| Ende der Routine | drei kurze, gleiche Töne (hoch) |
 
 - Der `AudioContext` wird beim Tippen auf Start erzeugt bzw. fortgesetzt. Das ist die einzige Nutzergeste, die nötig ist.
 - Lautstärke: fest und angenehm. Eine Lautstärkeeinstellung gibt es in V1 nicht, es gilt die Systemlautstärke.
@@ -330,7 +330,7 @@ export function baseBounds(steps: readonly Step[]): { min: number; max: number }
 6. Das Verhältnis der Schrittdauern bleibt bei jeder Grunddauer gleich, abgesehen von der Rundung auf ganze Sekunden bzw. bei der Atmung auf 10 s.
 7. Der A/B-Tag ergibt sich korrekt aus der Zahl der Tage seit 2026-01-01, auch beim Monatswechsel 31. → 1.
 8. Während der Routine bleibt der Bildschirm an (Wake Lock), solange die App im Vordergrund ist.
-9. Töne erklingen 3/2/1 s vor Schrittende, bei Schrittstart, an Segmentgrenzen und am Ende. Die Abweichung beträgt höchstens 250 ms gegenüber dem Plan, bei simulierter Uhr exakt.
+9. Töne erklingen 3/2/1 s vor Schrittende, am Schrittende, an Segmentgrenzen und am Ende der Routine. Die Abweichung beträgt höchstens 250 ms gegenüber dem Plan, bei simulierter Uhr exakt.
 10. Jede Übung zeigt eine animierte Strichfigur mit ihren Schlüsselposen, aus 2 m erkennbar (manuelle Prüfung).
 11. Nach Druck auf Start läuft eine komplette Routine ohne weitere Berührung bis zum Fertig-Bildschirm durch.
 12. Im Blutdruck-Modus gibt es genau 4 Halteblöcke à 120 s mit je 120 s Pause dazwischen, insgesamt 14:00 min.
@@ -343,7 +343,6 @@ export function baseBounds(steps: readonly Step[]): { min: number; max: number }
 - Konten, Synchronisation, Statistik, Streaks, Erinnerungen und Push-Benachrichtigungen: für ein persönliches Werkzeug nicht nötig.
 - Mehrere Profile für die Familie: erst sinnvoll, wenn Familienmitglieder die App wirklich nutzen.
 - iOS-Optimierung: kein iPhone im Einsatz.
-- Schritt überspringen und zurück: nicht gewünscht, weil der Ablauf ohne Berührung laufen soll.
 - Progressionsschema (Wochen 1–4) aus dem Bericht: Die Grunddauer übernimmt das manuell.
 
 ## Open Questions

@@ -98,7 +98,7 @@ Definition of Done für jede Aufgabe: `npm test` und `npm run typecheck` sind gr
 **Dateien:** `src/figures/skeleton.ts`, `src/figures/render.ts`, `src/figures/poses.ts`, `tests/figures.test.ts`
 **Umfang:** M
 
-### - [x] Task 6: Töne, Wake Lock, Hintergrund-Pause (Gerätetest am Checkpoint B offen)
+### - [x] Task 6: Töne, Wake Lock, Hintergrund-Pause (Gerätetest 2026-11-20: Töne und Bildschirm-an bestätigt)
 
 **Beschreibung:**
 - **Töne:** `beeper.ts` mit den vier Tönen aus der Spec, angehängt an die Ereignisse des Automaten. `AudioContext` beim Tippen auf Start.

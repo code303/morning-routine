@@ -3,7 +3,8 @@ export interface Beeper {
   /** Muss aus einer Nutzergeste (Tippen auf Start) heraus aufgerufen werden. */
   unlock(): void;
   countdown(): void;
-  stepStart(): void;
+  /** Langer Ton am Ende einer Übung. */
+  stepEnd(): void;
   segmentSwitch(): void;
   done(): void;
 }
@@ -49,17 +50,18 @@ export function createBeeper(): Beeper {
       }
     },
     countdown: () => play([{ freq: 660, duration: 0.12 }]),
-    stepStart: () => play([{ freq: 880, duration: 0.4 }]),
+    stepEnd: () => play([{ freq: 880, duration: 0.4 }]),
     segmentSwitch: () =>
       play([
         { freq: 740, duration: 0.1 },
         { freq: 740, duration: 0.1, delay: 0.16 },
       ]),
+    // Ende der Routine: drei kurze, gleiche Töne
     done: () =>
       play([
-        { freq: 523, duration: 0.18 },
-        { freq: 659, duration: 0.18, delay: 0.2 },
-        { freq: 784, duration: 0.4, delay: 0.4 },
+        { freq: 880, duration: 0.15 },
+        { freq: 880, duration: 0.15, delay: 0.3 },
+        { freq: 880, duration: 0.15, delay: 0.6 },
       ]),
   };
 }

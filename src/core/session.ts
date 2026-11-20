@@ -8,6 +8,8 @@ export type SessionEvent =
   | { readonly type: 'stepStart'; readonly index: number; readonly at: number }
   | { readonly type: 'countdown'; readonly index: number; readonly remaining: 1 | 2 | 3; readonly at: number }
   | { readonly type: 'segmentSwitch'; readonly index: number; readonly segment: number; readonly at: number }
+  /** Ende einer Übung (nicht der letzten – dort folgt `done`). */
+  | { readonly type: 'stepEnd'; readonly index: number; readonly at: number }
   | { readonly type: 'transitionStart'; readonly nextIndex: number; readonly at: number }
   | { readonly type: 'done'; readonly at: number };
 
@@ -44,6 +46,12 @@ export interface Session {
   resume(): void;
   stop(): void;
   tick(): TickResult;
+  /** Springt an den Anfang eines Schritts; Pausenzustand bleibt erhalten. */
+  jumpTo(index: number): void;
+  /** Nächster Schritt (in einer Wechselpause: der angekündigte). Kein Sprung hinter den letzten. */
+  next(): void;
+  /** Vorheriger Schritt (in einer Wechselpause: der gerade beendete); im ersten Schritt: von vorn. */
+  previous(): void;
   readonly timeline: readonly Phase[];
   readonly total: number;
 }
@@ -85,6 +93,8 @@ export function buildEvents(timeline: readonly Phase[], plan?: Plan): SessionEve
       const at = phase.end - remaining;
       if (at > phase.start) events.push({ type: 'countdown', index: phase.index, remaining, at });
     }
+    const isLastStep = phase === timeline[timeline.length - 1];
+    if (!isLastStep) events.push({ type: 'stepEnd', index: phase.index, at: phase.end });
   }
   const last = timeline[timeline.length - 1];
   events.push({ type: 'done', at: last ? last.end : 0 });
@@ -167,5 +177,27 @@ export function createSession(plan: Plan, clock: Clock): Session {
       status = 'stopped';
     },
     tick,
+    jumpTo,
+    next() {
+      const phase = phaseAt(elapsedSeconds());
+      const target = phase.kind === 'transition' ? phase.index : phase.index + 1;
+      if (target < plan.steps.length) jumpTo(target);
+    },
+    previous() {
+      const phase = phaseAt(elapsedSeconds());
+      jumpTo(Math.max(0, phase.index - 1));
+    },
   };
+
+  function jumpTo(index: number): void {
+    if (status !== 'running' && status !== 'paused') return;
+    const target = timeline.find((p) => p.kind === 'step' && p.index === index);
+    if (!target) return;
+    accumulatedMs = target.start * 1000;
+    if (status === 'running') runningSince = clock();
+    // Ereignisse ab dem Start des Zielschritts neu ausspielen (stepStart, Countdown, …),
+    // aber kein stepEnd des vorherigen Schritts, das auf denselben Zeitpunkt fällt.
+    const first = events.findIndex((e) => e.type === 'stepStart' && e.index === index);
+    nextEvent = first === -1 ? events.length : first;
+  }
 }
